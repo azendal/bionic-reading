@@ -1,12 +1,17 @@
+var syllableRegex = /[^aeiouy]*[aeiouy]+(?:[^aeiouy]*$|[^aeiouy](?=[^aeiouy]))?/gi;
+
+function syllabify(words) {
+    return words.match(syllableRegex);
+}
+
 // making half of the letters in a word bold
 function highlightText(sentenceText) {
   return sentenceText
     .replace(/\p{L}+/gu, (word) => {
-      const { length } = word;
-      let midPoint = 1;
-      if (length > 3) midPoint = Math.round(length / 2);
-      const firstHalf = word.slice(0, midPoint);
-      const secondHalf = word.slice(midPoint);
+      var w = syllabify(word) || [word];
+      var l = w.length;
+      var firstHalf = w.slice(0, Math.round(l/3 * 2));
+      var secondHalf = w.slice(Math.round(l/3 * 2), l.length)
       const htmlWord = `<br-bold class="br-bold">${firstHalf}</br-bold>${secondHalf}`;
       return htmlWord;
     });
